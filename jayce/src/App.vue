@@ -1,18 +1,19 @@
 <template>
-  <Main/>
+  <sandbox/>
 </template>
 
 <script>
-import Main from './components/Main.vue'
+import sandbox from './components/sandbox';
 
 export default {
   name: 'App',
+
   components: {
-    Main
-  }
-}
+    sandbox,
+  },
+
+  data: () => ({
+    //
+  }),
+};
 </script>
-
-<style>
-
-</style>
