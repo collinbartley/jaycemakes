@@ -7,7 +7,7 @@
       :mini-variant="primaryDrawer.mini"
       :permanent="primaryDrawer.type === 'permanent'"
       :temporary="primaryDrawer.type === 'temporary'"
-      disable-resize-watcher="true"
+      :disable-resize-watcher="true"
       app
       overflow>
       <!-- <h1 class="title font-weight-thin text-center text--primary">Jayce Vogt</h1>
@@ -17,7 +17,7 @@
         <v-list-item
           v-for="(post,index) in posts" :key="post.slug + '_' + index"
         >
-          <v-list-item-content>
+          <v-list-item-content @click="getPost(post.slug)">
             <v-list-item-title v-text="post.title"></v-list-item-title>
             <v-list-item-subtitle v-text="new Date(post.created).toDateString()"></v-list-item-subtitle>
           </v-list-item-content>
@@ -29,6 +29,7 @@
       :clipped-left="primaryDrawer.clipped"
       :dense="true"
       :flat="true"
+      src="https://images.unsplash.com/photo-1506318137071-a8e063b4bec0?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1970&q=80"
       app
     >
       <v-app-bar-nav-icon
@@ -38,18 +39,9 @@
       <v-toolbar-title>Jayce Vogt</v-toolbar-title>
     </v-app-bar>
 
-    <v-content>
+    <v-content v-if="selectedPost">
       <v-container fluid>
-        <v-list>
-            <v-card>
-                <v-card-title>Test Post</v-card-title>
-                <v-card-subtitle>10/16/19</v-card-subtitle>
-                <v-card-text>Wowwwwwwwwwwwwwwwwwwwwwwwwwwwww</v-card-text>
-                <v-card-actions>
-                    <v-btn>Download .STL Files</v-btn>
-                </v-card-actions>
-            </v-card>
-        </v-list>
+        <BlogPost v-bind:inputPost="this.selectedPost"></BlogPost>
       </v-container>
     </v-content>
 
@@ -63,11 +55,16 @@
 </template>
 
 <script>
+    import BlogPost from "./BlogPost.vue";
     import { butter } from '@/buttercms'
   export default {
     name: 'sandbox',
+    components: {
+        BlogPost,
+    },
     data: () => ({
         posts: {},
+        selectedPost: null,
         drawers: ['Default (no property)', 'Permanent', 'Temporary'],
         primaryDrawer: {
             model: null,
@@ -79,24 +76,6 @@
         footer: {
             inset: false,
         },
-        items: [
-        {
-          text: 'A Cool Gun',
-          date: '10/12/19'
-        },
-        {
-          text: 'Printing Gone Wrong',
-          date: '10/12/19'
-        },
-        {
-          text: 'Wow weird',
-          date: '10/12/19'
-        },
-        {
-          text: 'Amazing',
-          date: '10/12/19'
-        },
-      ],
       model: 1,
     }),
     methods: {
@@ -105,10 +84,19 @@
           page: 1,
           page_size: 100
             }).then((res) => {
-          console.log(res.data)
           this.posts = res.data.data
+          this.selectedPost = this.posts[0];
+          console.log(this.posts);
         })
-      }
+      },
+      getPost(slug) {
+        this.posts.filter(_post => {
+            if(_post.slug == slug) {
+                this.selectedPost = _post;
+                console.log(this.selectedPost);
+            }
+        });
+        },
     },
     created() {
       this.getPosts()
