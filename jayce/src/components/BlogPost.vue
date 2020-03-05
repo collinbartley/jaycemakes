@@ -3,8 +3,9 @@
         <v-card-title>{{inputPost.title}}</v-card-title>
         <v-card-subtitle>{{new Date(inputPost.created).toDateString()}}</v-card-subtitle>
         <v-card-text><div v-html="inputPost.body"></div></v-card-text>
-        <v-card-actions>
-            <v-btn v-html="inputPost.summary"></v-btn>
+        <v-card-actions v-if="buttons">
+            <div class="button" v-for="(button,index) in buttons" :key="index"><v-btn v-bind:href="buttons[index][1]">{{buttons[index][0]}}</v-btn></div>
+            <!-- <v-btn v-bind:href="buttons[1]">{{buttons[0]}}</v-btn> -->
         </v-card-actions>
     </v-card>
 </template>
@@ -13,22 +14,14 @@
   export default {
     name: 'BlogPost',
     props: {
-        inputPost: Object
+        inputPost: Object,
+        buttons: null
     }
   }
 </script>
 
 <style scoped>
-    .btn {
-        border: solid black 2px;
-        background: black;
-        border-radius: 8px;
-        padding: 5px;
-        text-decoration: none;
-        color: grey;
-    }
-
-    .btn:hover {
-        border-radius: 0px;
+    .button {
+        margin-right: 8px;
     }
 </style>

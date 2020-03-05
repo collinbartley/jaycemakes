@@ -12,8 +12,8 @@
       overflow>
       <!-- <h1 class="title font-weight-thin text-center text--primary">Jayce Vogt</h1>
       <hr style="opacity: 0.1;"/> -->
-      <v-list>
-      <v-list-item-group v-model="model">
+      <v-list :dense="true">
+      <v-list-item-group v-model="model" :mandatory="true">
         <v-list-item
           v-for="(post,index) in posts" :key="post.slug + '_' + index"
         >
@@ -41,7 +41,7 @@
 
     <v-content v-if="selectedPost">
       <v-container fluid>
-        <BlogPost v-bind:inputPost="this.selectedPost"></BlogPost>
+        <BlogPost v-bind:inputPost="this.selectedPost" v-bind:buttons="this.buttons[this.selectedPostIndex]"></BlogPost>
       </v-container>
     </v-content>
 
@@ -64,7 +64,9 @@
     },
     data: () => ({
         posts: {},
+        buttons: [],
         selectedPost: null,
+        selectedPostIndex: null,
         drawers: ['Default (no property)', 'Permanent', 'Temporary'],
         primaryDrawer: {
             model: null,
@@ -85,7 +87,19 @@
           page_size: 100
             }).then((res) => {
           this.posts = res.data.data
+          this.posts.forEach(post => {
+            if(post.summary[0] == '$') {
+              post.summary = post.summary.substr(1);
+              var preButtons = post.summary.split('|');
+              var splitLink = [];
+              preButtons.forEach(pre => {
+                splitLink.push(pre.split(','))
+              });
+              this.buttons.push(splitLink);
+            }
+          });
           this.selectedPost = this.posts[0];
+          this.selectedPostIndex = 0;
           console.log(this.posts);
         })
       },
@@ -93,6 +107,7 @@
         this.posts.filter(_post => {
             if(_post.slug == slug) {
                 this.selectedPost = _post;
+                this.selectedPostIndex = this.posts.indexOf(_post);
                 console.log(this.selectedPost);
             }
         });
@@ -105,7 +120,7 @@
 </script>
 
 <style lang="scss" scoped>
- .floating-button {
+  .floating-button {
      position: absolute;
     z-index: 1000;
     left: 0;
