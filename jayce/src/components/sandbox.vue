@@ -20,6 +20,7 @@
           <v-list-item-content @click="getPost(post.slug)">
             <v-list-item-title v-text="post.title"></v-list-item-title>
             <v-list-item-subtitle v-text="new Date(post.created).toDateString()"></v-list-item-subtitle>
+            <span v-bind:class="'category ' + post.categories[0].slug"></span>
           </v-list-item-content>
         </v-list-item>
       </v-list-item-group>
@@ -29,7 +30,6 @@
       :clipped-left="primaryDrawer.clipped"
       :dense="true"
       :flat="true"
-      src="https://images.unsplash.com/photo-1506318137071-a8e063b4bec0?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1970&q=80"
       app
     >
       <v-app-bar-nav-icon
@@ -41,7 +41,7 @@
 
     <v-content v-if="selectedPost">
       <v-container fluid>
-        <BlogPost v-bind:inputPost="this.selectedPost" v-bind:buttons="this.buttons[this.selectedPostIndex]"></BlogPost>
+        <BlogPost v-bind:inputPost="this.selectedPost"></BlogPost>
       </v-container>
     </v-content>
 
@@ -64,9 +64,7 @@
     },
     data: () => ({
         posts: {},
-        buttons: [],
         selectedPost: null,
-        selectedPostIndex: null,
         drawers: ['Default (no property)', 'Permanent', 'Temporary'],
         primaryDrawer: {
             model: null,
@@ -88,29 +86,21 @@
             }).then((res) => {
           this.posts = res.data.data
           this.posts.forEach(post => {
-            if(post.summary[0] == '$') {
-              post.summary = post.summary.substr(1);
-              var preButtons = post.summary.split('|');
-              var splitLink = [];
-              preButtons.forEach(pre => {
-                splitLink.push(pre.split(','))
-              });
-              this.buttons.push(splitLink);
+            if(post.tags.length) {
+              post.tags.forEach(tag => {
+                tag.slug = tag.slug.replace("-", " ");
+              })
             }
           });
           this.selectedPost = this.posts[0];
-          this.selectedPostIndex = 0;
-          console.log(this.posts);
         })
       },
       getPost(slug) {
         this.posts.filter(_post => {
             if(_post.slug == slug) {
                 this.selectedPost = _post;
-                this.selectedPostIndex = this.posts.indexOf(_post);
-                console.log(this.selectedPost);
             }
-        });
+          });
         },
     },
     created() {
@@ -120,10 +110,41 @@
 </script>
 
 <style lang="scss" scoped>
-  .floating-button {
-     position: absolute;
-    z-index: 1000;
-    left: 0;
-    top: 0;
- }
+  .category {
+    width: 7px;
+    height: 100%;
+    position: absolute;
+    right: 0;
+    opacity: 0.5;
+  }
+</style>
+
+<style lang="scss">
+  .red {
+    background-color: red;
+  }
+
+  .orange {
+    background-color: orange;
+  }
+
+  .yellow {
+    background-color: yellow;
+  }
+
+  .green {
+    background-color: green;
+  }
+
+  .blue {
+    background-color: blue;
+  }
+
+  .indigo {
+    background-color: indigo;
+  }
+
+  .violet {
+    background-color: violet;
+  }
 </style>
