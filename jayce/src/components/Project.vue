@@ -5,14 +5,13 @@
         <v-card-text><div v-html="inputPost.body"></div></v-card-text>
         <v-card-actions v-if="inputPost.tags.length">
             <div class="button" v-for="(button,index) in inputPost.tags" :key="index"><v-btn v-bind:href="button.name">{{button.slug}}</v-btn></div>
-            <!-- <v-btn v-bind:href="buttons[1]">{{buttons[0]}}</v-btn> -->
         </v-card-actions>
     </v-card>
 </template>
 
 <script>
   export default {
-    name: 'BlogPost',
+    name: 'project',
     props: {
         inputPost: Object,
     }

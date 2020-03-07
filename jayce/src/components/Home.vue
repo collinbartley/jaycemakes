@@ -1,5 +1,5 @@
 <template>
-  <v-app id="sandbox">
+  <v-app id="home">
     <v-navigation-drawer
       v-model="primaryDrawer.model"
       :clipped="primaryDrawer.clipped"
@@ -41,7 +41,7 @@
 
     <v-content v-if="selectedPost">
       <v-container fluid>
-        <BlogPost v-bind:inputPost="this.selectedPost"></BlogPost>
+        <project v-bind:inputPost="this.selectedPost"></project>
       </v-container>
     </v-content>
 
@@ -49,18 +49,21 @@
       :inset="footer.inset"
       app
     >
-      <span style="opacity: 0.5;" class="px-4">&copy; {{ new Date().getFullYear() }} made by collin bartley - <a href="https://cobar.co" class="orange--text">cobar.co</a></span>
+      <div>
+        <span style="opacity: 0.5;" class="px-4">&copy; {{ new Date().getFullYear() }} made by collin bartley - <a href="https://cobar.co" class="orange--text">cobar.co</a></span>
+        <div><a href="https://buttercms.com"><img style="width: 130px;" src="https://cdn.buttercms.com/RyJ7UhcVTCRqrCFXwgCo" alt="ButterCMS"></a></div>
+      </div>
     </v-footer>
   </v-app>
 </template>
 
 <script>
-    import BlogPost from "./BlogPost.vue";
+    import project from "./Project.vue";
     import { butter } from '@/buttercms'
   export default {
-    name: 'sandbox',
+    name: 'home',
     components: {
-        BlogPost,
+        project,
     },
     data: () => ({
         posts: {},
@@ -116,6 +119,13 @@
     position: absolute;
     right: 0;
     opacity: 0.5;
+  }
+
+  .image {
+    position: relative;
+    right: 0;
+    margin: 5px;
+    float: right;
   }
 </style>
 

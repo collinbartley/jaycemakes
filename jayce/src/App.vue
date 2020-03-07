@@ -1,15 +1,15 @@
 <template>
-  <sandbox/>
+  <home/>
 </template>
 
 <script>
-import sandbox from './components/sandbox';
+import home from './components/Home';
 
 export default {
   name: 'App',
 
   components: {
-    sandbox,
+    home,
   },
 
   data: () => ({
